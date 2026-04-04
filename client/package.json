@@ -1,0 +1,27 @@
+{
+  "name": "graphql-learning-client",
+  "version": "0.0.1",
+  "description": "GraphQL学習プロジェクト — Next.jsクライアント",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --port 3003",
+    "build": "next build",
+    "start": "next start --port 3003",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "next": "^15.3.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "urql": "^5.0.0",
+    "@urql/core": "^5.1.0",
+    "@urql/next": "^2.0.0",
+    "graphql": "^16.10.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "typescript": "^5.8.0"
+  }
+}

@@ -25,27 +25,38 @@
 GraphQL/
 ├── CLAUDE.md                 # Claude Code用ルール
 ├── learning-plan.md          # この学習計画
-├── package.json
-├── tsconfig.json
-├── nest-cli.json
-├── src/
-│   ├── main.ts               # エントリーポイント（ポート3002）
-│   ├── app.module.ts          # ルートモジュール（GraphQLModule統合）
-│   ├── app.controller.ts      # プロジェクト情報API（REST）
-│   └── exercises/             # 演習モジュール群
-│       ├── layer01-basics/
-│       │   ├── progress.md
-│       │   ├── 01-schema-and-types/
-│       │   ├── 02-queries-and-mutations/
-│       │   └── 03-resolvers/
-│       ├── layer02-data-modeling/
-│       └── ...
-└── test/
+├── .gitignore
+├── server/                   # GraphQLサーバー（NestJS + Apollo Server）
+│   ├── package.json
+│   ├── tsconfig.json
+│   ├── nest-cli.json
+│   ├── src/
+│   │   ├── main.ts               # エントリーポイント（ポート3002）
+│   │   ├── app.module.ts          # ルートモジュール（GraphQLModule統合）
+│   │   ├── app.controller.ts      # プロジェクト情報API（REST）
+│   │   └── exercises/             # 演習モジュール群
+│   │       ├── layer01-basics/
+│   │       │   ├── progress.md
+│   │       │   ├── 01-schema-and-types/
+│   │       │   ├── 02-queries-and-mutations/
+│   │       │   └── 03-resolvers/
+│   │       ├── layer02-data-modeling/
+│   │       └── ...
+│   └── test/
+└── client/                   # GraphQLクライアント（Next.js + urql）
+    ├── package.json
+    ├── tsconfig.json
+    ├── next.config.ts
+    └── src/
+        ├── app/                  # App Router（演習ページ）
+        └── lib/                  # urqlクライアント設定
 ```
 
 ### 演習ディレクトリの構造（各レイヤー共通）
+
+**サーバー側:**
 ```
-src/exercises/layer01-basics/
+server/src/exercises/layer01-basics/
 ├── progress.md
 ├── 01-schema-and-types/
 │   ├── README.md          # 課題文
@@ -59,7 +70,15 @@ src/exercises/layer01-basics/
     └── ...
 ```
 
-> **ポイント**: NestJS学習ではControllerとServiceが中心だったが、GraphQL学習ではResolverとObjectType（モデル）が中心になる。NestJSのModule構造は共通基盤として活用しつつ、「RESTとは異なるデータ取得のパラダイム」を体感する。
+**クライアント側:**
+```
+client/src/app/exercises/layer01-basics/
+├── 01-schema-and-types/
+│   └── page.tsx           # Next.jsからGraphQL APIを呼び出す演習ページ
+└── ...
+```
+
+> **ポイント**: サーバー側でGraphQL APIを実装し、クライアント側（Next.js + urql）からそのAPIを呼び出すことで、GraphQLの「サーバーとクライアント両面」を体験する。
 
 ---
 
@@ -323,8 +342,10 @@ src/exercises/layer01-basics/
    → 「レビューして」と依頼 → フィードバックを受ける
 
 5. 動作確認
-   → npm run start:dev で起動
+   → サーバー: cd server && npm run start:dev（ポート3002）
+   → クライアント: cd client && npm run dev（ポート3003）
    → GraphQL Playground (http://localhost:3002/graphql) でクエリを実行
+   → Next.js (http://localhost:3003) からGraphQL通信を確認
 
 6. notes.md に気づき・学びを記録
 

@@ -22,33 +22,56 @@ internal-system の BFF 層を自信を持って実装できるレベルを目�
 GraphQL/
 ├── CLAUDE.md                 # このファイル
 ├── learning-plan.md          # 学習計画
-├── package.json
-├── tsconfig.json
-├── nest-cli.json
-├── src/
-│   ├── main.ts               # エントリーポイント（ポート3002）
-│   ├── app.module.ts          # ルートモジュール（GraphQLModule統合）
-│   ├── app.controller.ts      # ルートコントローラー（プロジェクト情報API）
-│   └── exercises/             # 演習モジュール群
-│       ├── layer01-basics/
-│       │   ├── 01-schema-and-types/
-│       │   ├── 02-queries-and-mutations/
-│       │   └── 03-resolvers/
-│       ├── layer02-data-modeling/
-│       └── ...
-└── test/
-    └── app.e2e-spec.ts
+├── .gitignore
+├── server/                   # GraphQLサーバー（NestJS + Apollo Server）
+│   ├── package.json
+│   ├── tsconfig.json
+│   ├── nest-cli.json
+│   ├── src/
+│   │   ├── main.ts               # エントリーポイント（ポート3002）
+│   │   ├── app.module.ts          # ルートモジュール（GraphQLModule統合）
+│   │   ├── app.controller.ts      # ルートコントローラー（プロジェクト情報API）
+│   │   └── exercises/             # 演習モジュール群
+│   │       ├── layer01-basics/
+│   │       │   ├── 01-schema-and-types/
+│   │       │   ├── 02-queries-and-mutations/
+│   │       │   └── 03-resolvers/
+│   │       ├── layer02-data-modeling/
+│   │       └── ...
+│   └── test/
+│       └── app.e2e-spec.ts
+└── client/                   # GraphQLクライアント（Next.js + urql）
+    ├── package.json
+    ├── tsconfig.json
+    ├── next.config.ts
+    └── src/
+        ├── app/                  # App Router
+        │   ├── layout.tsx
+        │   └── page.tsx
+        └── lib/
+            ├── urql.ts           # RSC用urqlクライアント
+            └── urql-provider.tsx  # Client Component用Provider
+```
+
+### 起動方法
+```bash
+# サーバー起動（ポート3002）
+cd server && npm run start:dev
+
+# クライアント起動（ポート3003）
+cd client && npm run dev
 ```
 
 ---
 
 ## 演習ディレクトリ構成（必須）
 
-すべての演習は `src/exercises/` 配下に配置します。
+すべての演習は `server/src/exercises/` 配下に配置します。
+クライアント側の演習コードは `client/src/app/exercises/` 配下に配置します。
 
-### 基本構成:
+### サーバー側の基本構成:
 ```
-src/exercises/layerXX-テーマ名/演習名/
+server/src/exercises/layerXX-テーマ名/演習名/
 ├── README.md              # 課題文（目的・要件・制約・ヒント）
 ├── answer.md              # 言語化演習の回答欄
 ├── design.md              # 実装演習の設計メモ欄
@@ -73,7 +96,19 @@ src/exercises/layerXX-テーマ名/演習名/
   - `notes.md`（学び・気づきのログ — 空ファイル）
   - `*.module.ts`（演習のモジュール定義）
 - `models/` や `dto/` や `guards/` は必要な場合のみ作成
-- 演習間で共有するユーティリティがある場合は `src/exercises/_shared/` に配置
+- 演習間で共有するユーティリティがある場合は `server/src/exercises/_shared/` に配置
+
+### クライアント側の構成:
+```
+client/src/app/exercises/layerXX-テーマ名/演習名/
+├── page.tsx               # 演習ページ（App Router）
+├── components/            # 演習用コンポーネント
+└── graphql/               # クエリ・ミューテーション定義
+```
+
+- サーバー側の演習で実装したGraphQL APIをNext.jsから呼び出す形でアウトプットする
+- urql の `useQuery` / `useMutation` を使ってGraphQL通信を実装する
+- RSC（React Server Components）からの呼び出しも演習に含める
 
 ---
 
@@ -91,12 +126,13 @@ src/exercises/layerXX-テーマ名/演習名/
 ### 動作確認
 - GraphQL Playground: `http://localhost:3002/graphql`
 - REST エンドポイント（プロジェクト情報）: `http://localhost:3002/`
+- Next.js クライアント: `http://localhost:3003`
 
 ---
 
 ## ルートエンドポイント（`app.controller.ts`）の役割
 
-`src/app.controller.ts` は **プロジェクト情報の提供** を行うだけのファイルです。
+`server/src/app.controller.ts` は **プロジェクト情報の提供** を行うだけのファイルです。
 - 演習ロジックをここに書かないでください
 - 演習のGraphQLスキーマは各演習モジュールのResolverで定義する
 
@@ -138,8 +174,10 @@ src/exercises/layerXX-テーマ名/演習名/
 ```
 
 ### Step 5: 動作確認
-- NestJSアプリを `npm run start:dev` で起動
+- サーバー: `cd server && npm run start:dev`（ポート3002）
+- クライアント: `cd client && npm run dev`（ポート3003）
 - GraphQL Playground (`http://localhost:3002/graphql`) でクエリを実行して動作を確認
+- Next.js (`http://localhost:3003`) からGraphQL通信の動作を確認
 - 例:
 ```graphql
 query {
@@ -188,7 +226,8 @@ query {
    - 過剰な設計や抽象化は行わないこと
    - 演習の骨組みだけを作り、ユーザーが手を加える余地を残すこと
 8. **AppModule への登録**
-   - 新しい演習モジュールを `src/app.module.ts` の `imports` に追加すること
+   - 新しい演習モジュールを `server/src/app.module.ts` の `imports` に追加すること
+   - クライアント側のページがある場合は `client/src/app/exercises/` にも追加すること
 9. **公式ドキュメントの参照**
    - 演習のテーマに関連する公式ドキュメントの参照には Context7 MCP を活用すること
 
@@ -267,8 +306,8 @@ query {
 
 ### ファイルの場所
 ```
-src/exercises/layer01-basics/progress.md
-src/exercises/layer02-data-modeling/progress.md
+server/src/exercises/layer01-basics/progress.md
+server/src/exercises/layer02-data-modeling/progress.md
 ...
 ```
 
