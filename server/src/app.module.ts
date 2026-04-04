@@ -3,6 +3,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'path';
 import { AppController } from './app.controller';
+import { BooksModule } from './exercises/layer01-basics/01-schema-and-types/books.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { AppController } from './app.controller';
       sortSchema: true,
       playground: true,
     }),
+    BooksModule,
   ],
   controllers: [AppController],
 })
