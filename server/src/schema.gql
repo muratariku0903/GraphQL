@@ -1,0 +1,24 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Book {
+  author: String!
+  genre: Genre!
+  id: ID!
+  publishedYear: Int
+  title: String!
+}
+
+enum Genre {
+  FICTION
+  HISTORY
+  NON_FICTION
+  SCIENCE
+  TECHNOLOGY
+}
+
+type Query {
+  book(id: ID!): Book
+  books: [Book!]!
+}

@@ -1,5 +1,29 @@
 import { ObjectType, Field, ID, Int, registerEnumType } from '@nestjs/graphql';
 
-// TODO: Genre Enumを定義し、registerEnumTypeで登録してください
+export enum Genre {
+  FICTION,
+  NON_FICTION,
+  SCIENCE,
+  TECHNOLOGY,
+  HISTORY,
+}
 
-// TODO: @ObjectType() と @Field() を使って Book型を定義してください
+registerEnumType(Genre, { name: 'Genre' });
+
+@ObjectType()
+export class Book {
+  @Field(() => ID)
+  id!: string;
+
+  @Field()
+  title!: string;
+
+  @Field()
+  author!: string;
+
+  @Field(() => Int, { nullable: true })
+  publishedYear!: number | null;
+
+  @Field(() => Genre)
+  genre!: Genre;
+}
