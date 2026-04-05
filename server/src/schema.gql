@@ -10,6 +10,13 @@ type Book {
   title: String!
 }
 
+input CreateBookInput {
+  author: String!
+  genre: Genre!
+  publishedYear: Int
+  title: String!
+}
+
 enum Genre {
   FICTION
   HISTORY
@@ -18,7 +25,20 @@ enum Genre {
   TECHNOLOGY
 }
 
+type Mutation {
+  createBook(input: CreateBookInput!): Book!
+  deleteBook(id: ID!): Boolean!
+  updateBook(id: ID!, input: UpdateBookInput!): Book
+}
+
 type Query {
   book(id: ID!): Book
   books: [Book!]!
+}
+
+input UpdateBookInput {
+  author: String
+  genre: Genre
+  publishedYear: Int
+  title: String
 }

@@ -1,5 +1,17 @@
 import { InputType, Field, Int } from '@nestjs/graphql';
 import { Genre } from '../books.model';
 
-// TODO: @InputType() と @Field() を使って UpdateBookInput を定義してください
-// 全フィールドを nullable にして、部分更新に対応すること
+@InputType()
+export class UpdateBookInput {
+  @Field({ nullable: true })
+  title?: string;
+
+  @Field({ nullable: true })
+  author?: string;
+
+  @Field(() => Int, { nullable: true })
+  publishedYear?: number | null;
+
+  @Field(() => Genre, { nullable: true })
+  genre?: Genre;
+}
