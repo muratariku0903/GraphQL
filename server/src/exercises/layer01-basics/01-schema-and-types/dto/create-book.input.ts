@@ -7,7 +7,7 @@ export class CreateBookInput {
   title!: string;
 
   @Field()
-  author!: string;
+  authorId!: string;
 
   @Field(() => Int, { nullable: true })
   publishedYear!: number | null;

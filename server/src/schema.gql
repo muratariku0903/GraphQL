@@ -2,8 +2,14 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Author {
+  country: String
+  id: ID!
+  name: String!
+}
+
 type Book {
-  author: String!
+  author: Author!
   genre: Genre!
   id: ID!
   publishedYear: Int
@@ -11,7 +17,7 @@ type Book {
 }
 
 input CreateBookInput {
-  author: String!
+  authorId: String!
   genre: Genre!
   publishedYear: Int
   title: String!
@@ -37,7 +43,7 @@ type Query {
 }
 
 input UpdateBookInput {
-  author: String
+  authorId: String
   genre: Genre
   publishedYear: Int
   title: String

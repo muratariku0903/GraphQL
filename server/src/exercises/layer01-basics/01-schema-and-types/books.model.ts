@@ -1,4 +1,11 @@
-import { ObjectType, Field, ID, Int, registerEnumType } from '@nestjs/graphql';
+import {
+  ObjectType,
+  Field,
+  ID,
+  Int,
+  registerEnumType,
+  HideField,
+} from '@nestjs/graphql';
 
 export enum Genre {
   FICTION,
@@ -18,8 +25,8 @@ export class Book {
   @Field()
   title!: string;
 
-  @Field()
-  author!: string;
+  @HideField()
+  authorId!: string;
 
   @Field(() => Int, { nullable: true })
   publishedYear!: number | null;

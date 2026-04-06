@@ -7,7 +7,7 @@ export class UpdateBookInput {
   title?: string;
 
   @Field({ nullable: true })
-  author?: string;
+  authorId?: string;
 
   @Field(() => Int, { nullable: true })
   publishedYear?: number | null;

@@ -9,23 +9,30 @@ export class BooksService {
     {
       id: '1',
       title: 'test',
-      author: 'test',
+      authorId: 'a1',
       publishedYear: 2026,
       genre: Genre.FICTION,
     },
     {
       id: '2',
       title: 'test',
-      author: 'test',
+      authorId: 'a2',
       publishedYear: 2026,
       genre: Genre.HISTORY,
     },
     {
       id: '3',
       title: 'test',
-      author: 'test',
+      authorId: 'a3',
       publishedYear: 2026,
       genre: Genre.NON_FICTION,
+    },
+    {
+      id: '4',
+      title: 'test',
+      authorId: 'a2',
+      publishedYear: 2026,
+      genre: Genre.SCIENCE,
     },
   ];
 
@@ -55,7 +62,7 @@ export class BooksService {
     const updated: Book = {
       ...target,
       title: input.title ?? target.title,
-      author: input.author ?? target.author,
+      authorId: input.authorId ?? target.authorId,
       publishedYear:
         input.publishedYear !== undefined
           ? input.publishedYear

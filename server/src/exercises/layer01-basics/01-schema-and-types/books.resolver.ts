@@ -1,22 +1,35 @@
-import { Resolver, Query, Args, ID, Mutation } from '@nestjs/graphql';
+import {
+  Resolver,
+  Query,
+  Args,
+  ID,
+  Mutation,
+  ResolveField,
+  Parent,
+} from '@nestjs/graphql';
 import { BooksService } from './books.service';
 import { Book } from './books.model';
 import { CreateBookInput } from './dto/create-book.input';
 import { UpdateBookInput } from './dto/update-book.input';
+import { Author } from './authors.model';
+import { AuthorService } from './authors.service';
 
 @Resolver(() => Book)
 export class BooksResolver {
-  constructor(private readonly service: BooksService) {}
+  constructor(
+    private readonly bookService: BooksService,
+    private readonly authorService: AuthorService,
+  ) {}
 
   // ---------- Query ----------
   @Query(() => [Book], { name: 'books' })
   findAll(): Book[] {
-    return this.service.findAll();
+    return this.bookService.findAll();
   }
 
   @Query(() => Book, { name: 'book', nullable: true })
   findOne(@Args('id', { type: () => ID }) id: string): Book | null {
-    return this.service.findOne(id);
+    return this.bookService.findOne(id);
   }
 
   // ---------- Mutation ----------
@@ -24,7 +37,7 @@ export class BooksResolver {
   createBook(
     @Args('input', { type: () => CreateBookInput }) input: CreateBookInput,
   ): Book {
-    return this.service.create(input);
+    return this.bookService.create(input);
   }
 
   @Mutation(() => Book, { nullable: true })
@@ -32,11 +45,16 @@ export class BooksResolver {
     @Args('id', { type: () => ID }) id: string,
     @Args('input', { type: () => UpdateBookInput }) input: UpdateBookInput,
   ): Book | null {
-    return this.service.update(id, input);
+    return this.bookService.update(id, input);
   }
 
   @Mutation(() => Boolean)
   deleteBook(@Args('id', { type: () => ID }) id: string): boolean {
-    return this.service.delete(id);
+    return this.bookService.delete(id);
+  }
+
+  @ResolveField(() => Author)
+  author(@Parent() book: Book): Author | null {
+    return this.authorService.findOne(book.authorId);
   }
 }
