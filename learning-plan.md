@@ -86,7 +86,7 @@ client/src/app/exercises/layer01-basics/
 
 ---
 
-### Layer 1: GraphQL基礎（推定 3-4日）
+### Layer 1: GraphQL基礎（推定 4-5日）
 
 #### 学ぶこと
 - GraphQLとは何か（RESTとの根本的な違い）
@@ -94,10 +94,12 @@ client/src/app/exercises/layer01-basics/
 - Query / Mutation / Subscription の3つのルートオペレーション
 - NestJSにおけるCode First vs Schema First アプローチ
 - `@ObjectType`, `@Field`, `@Query`, `@Mutation` デコレーター
+- Next.js + urql によるフロントエンドからのGraphQL通信
 
 #### インプット
 - GraphQL公式ドキュメント: Introduction, Queries and Mutations, Schemas and Types
 - NestJS公式ドキュメント: GraphQL — Quick Start, Resolvers, Mutations
+- urql公式ドキュメント: Basics, React/Next.js Bindings
 
 #### アウトプット演習
 
@@ -124,6 +126,15 @@ client/src/app/exercises/layer01-basics/
 - 言語化: 「Resolverのフィールドリゾルバー（`@ResolveField`）がGraphQLの最大の強みである理由を、N+1問題に触れながら説明せよ」
 - 実装: `BooksResolver` に `@ResolveField` を追加し、書籍の著者情報（Author型）を遅延解決する
 - 実装: Serviceレイヤーとの責務分離（ResolverはGraphQL変換のみ、ロジックはServiceに集約）
+
+**演習1-4: フロント統合 — Next.js + urql（言語化 + 実装）**
+- 言語化: 「urqlのExchange（cacheExchange, fetchExchange, ssrExchange）の役割を、Expressのmiddlewareと対比して説明せよ」
+- 言語化: 「React Server Components（RSC）からGraphQLを呼ぶ場合と、Client Componentから `useQuery` で呼ぶ場合の違いを、データフェッチのタイミングとキャッシュの観点で説明せよ」
+- 言語化: 「Mutation後のキャッシュ更新戦略（自動更新 / refetch / 手動キャッシュ操作）を比較し、それぞれどのような場合に選択するか説明せよ」
+- 実装: Next.js（client/）から urql の `useQuery` を使って書籍一覧・詳細を取得するページを実装
+- 実装: `useMutation` を使って書籍の作成・更新・削除を行うフォームを実装
+- 実装: Mutation後のキャッシュ挙動を観察し、リスト更新の手動リフレッシュを実装
+- 実装: RSC（React Server Components）からの GraphQL データ取得を実装し、Client Componentとの違いを比較
 
 ---
 
