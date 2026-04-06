@@ -8,6 +8,20 @@ export default function Home() {
         <li>Client: <code>http://localhost:3003</code></li>
       </ul>
       <p>演習の実装が進むと、ここから GraphQL クエリを実行できるようになります。</p>
+
+      <h2>演習</h2>
+      <ul>
+        <li>
+          <a href="/exercises/layer01/04-frontend-integration/client">
+            Layer 1-4: 書籍一覧（Client Component版）
+          </a>
+        </li>
+        <li>
+          <a href="/exercises/layer01/04-frontend-integration/server">
+            Layer 1-4: 書籍一覧（Server Component版）
+          </a>
+        </li>
+      </ul>
     </main>
   );
 }
