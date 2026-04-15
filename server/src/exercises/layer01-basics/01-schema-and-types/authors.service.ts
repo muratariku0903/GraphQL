@@ -13,4 +13,11 @@ export class AuthorService {
     console.log('execute fineOne', id);
     return this.items.find((e) => e.id === id) ?? null;
   }
+
+  findByIds(ids: readonly string[]): Author[] {
+    console.log('execute findByIds', ids);
+    return ids
+      .map((id) => this.items.find((e) => e.id === id))
+      .filter((e) => e !== undefined);
+  }
 }

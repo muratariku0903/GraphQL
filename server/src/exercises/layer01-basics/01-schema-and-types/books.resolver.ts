@@ -12,13 +12,13 @@ import { Book } from './books.model';
 import { CreateBookInput } from './dto/create-book.input';
 import { UpdateBookInput } from './dto/update-book.input';
 import { Author } from './authors.model';
-import { AuthorService } from './authors.service';
+import { AuthorsLoader } from './authors.loader';
 
 @Resolver(() => Book)
 export class BooksResolver {
   constructor(
     private readonly bookService: BooksService,
-    private readonly authorService: AuthorService,
+    private readonly authorsLoader: AuthorsLoader,
   ) {}
 
   // ---------- Query ----------
@@ -53,8 +53,9 @@ export class BooksResolver {
     return this.bookService.delete(id);
   }
 
+  // ---------- ResolveField ----------
   @ResolveField(() => Author)
-  author(@Parent() book: Book): Author | null {
-    return this.authorService.findOne(book.authorId);
+  async author(@Parent() book: Book): Promise<Author | null> {
+    return this.authorsLoader.load(book.authorId);
   }
 }
