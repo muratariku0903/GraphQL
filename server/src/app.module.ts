@@ -4,6 +4,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'path';
 import { AppController } from './app.controller';
 import { BooksModule } from './exercises/layer01-basics/01-schema-and-types/books.module';
+import { ErrorHandlingModule } from './exercises/layer04-error-and-optimization/01-error-handling/error-handling.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { BooksModule } from './exercises/layer01-basics/01-schema-and-types/book
       playground: true,
     }),
     BooksModule,
+    ErrorHandlingModule,
   ],
   controllers: [AppController],
 })
