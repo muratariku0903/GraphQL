@@ -3,5 +3,5 @@
 ## サブトピック一覧
 
 - [x] 01-validation（class-validator によるInputバリデーション）
-- [ ] 02-dataloader（DataLoaderによるN+1問題の解消）
-- [ ] 03-pagination-and-filtering（ページネーションとフィルタリング）
+- [x] 02-dataloader（DataLoaderによるN+1問題の解消）
+- [x] 03-pagination-and-filtering（ページネーションとフィルタリング）

@@ -13,6 +13,8 @@ import { CreateBookInput } from './dto/create-book.input';
 import { UpdateBookInput } from './dto/update-book.input';
 import { Author } from './authors.model';
 import { AuthorsLoader } from './authors.loader';
+import { BookFilterInput, PaginationInput } from './dto/pagination.input';
+import { BookConnection } from './pagination.model';
 
 @Resolver(() => Book)
 export class BooksResolver {
@@ -30,6 +32,16 @@ export class BooksResolver {
   @Query(() => Book, { name: 'book', nullable: true })
   findOne(@Args('id', { type: () => ID }) id: string): Book | null {
     return this.bookService.findOne(id);
+  }
+
+  @Query(() => BookConnection, { name: 'bookConnection' })
+  bookConnection(
+    @Args('pagination', { type: () => PaginationInput })
+    pagination: PaginationInput,
+    @Args('filter', { type: () => BookFilterInput, nullable: true })
+    filter?: BookFilterInput,
+  ): BookConnection {
+    return this.bookService.findWithPagination(pagination, filter);
   }
 
   // ---------- Mutation ----------

@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { Book, Genre } from './books.model';
 import { CreateBookInput } from './dto/create-book.input';
 import { UpdateBookInput } from './dto/update-book.input';
+import { BookFilterInput, PaginationInput } from './dto/pagination.input';
+import { BookConnection } from './pagination.model';
 
 @Injectable()
 export class BooksService {
@@ -82,5 +84,59 @@ export class BooksService {
     this.items = this.items.filter((e) => e.id !== id);
 
     return true;
+  }
+
+  findWithPagination(
+    pagination: PaginationInput,
+    filter?: BookFilterInput,
+  ): BookConnection {
+    let filtered = [...this.items];
+    if (filter?.genre !== undefined) {
+      filtered = filtered.filter((e) => e.genre === filter.genre);
+    }
+    if (filter?.publishedYearFrom !== undefined) {
+      filtered = filtered.filter(
+        (e) => e.publishedYear && e.publishedYear >= filter.publishedYearFrom!,
+      );
+    }
+    if (filter?.publishedYearTo !== undefined) {
+      filtered = filtered.filter(
+        (e) => e.publishedYear && e.publishedYear <= filter.publishedYearTo!,
+      );
+    }
+
+    const { first, after } = pagination;
+
+    const afterIndex = after
+      ? filtered.findIndex((b) => b.id === this.decodeCursor(after))
+      : -1;
+
+    const sliced = filtered.slice(afterIndex + 1, afterIndex + 1 + first + 1);
+    const hasNextPage = sliced.length > first;
+    const edges = sliced.slice(0, first).map((book) => ({
+      cursor: this.encodeCursor(book.id),
+      node: book,
+    }));
+
+    return {
+      edges,
+      pageInfo: {
+        hasNextPage,
+        hasPreviousPage: after !== undefined,
+        startCursor: edges.length > 0 ? edges[0].cursor : null,
+        endCursor: edges.length > 0 ? edges[edges.length - 1].cursor : null,
+      },
+      totalCount: filtered.length,
+    };
+  }
+
+  private encodeCursor(id: string): string {
+    return Buffer.from(id).toString('base64');
+  }
+
+  private decodeCursor(cursor: string | null): string {
+    if (!cursor) return '1';
+
+    return Buffer.from(cursor, 'base64').toString('utf-8');
   }
 }

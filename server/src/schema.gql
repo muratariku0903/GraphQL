@@ -16,6 +16,23 @@ type Book {
   title: String!
 }
 
+type BookConnection {
+  edges: [BookEdge!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type BookEdge {
+  cursor: String!
+  node: Book!
+}
+
+input BookFilterInput {
+  genre: Genre
+  publishedYearFrom: Float
+  publishedYearTo: Float
+}
+
 input CreateBookInput {
   authorId: String!
   genre: Genre!
@@ -37,8 +54,21 @@ type Mutation {
   updateBook(id: ID!, input: UpdateBookInput!): Book
 }
 
+type PageInfo {
+  endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+}
+
+input PaginationInput {
+  after: String
+  first: Float! = 10
+}
+
 type Query {
   book(id: ID!): Book
+  bookConnection(filter: BookFilterInput, pagination: PaginationInput!): BookConnection!
   books: [Book!]!
 }
 
