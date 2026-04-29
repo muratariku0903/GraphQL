@@ -33,6 +33,18 @@ input BookFilterInput {
   publishedYearTo: Float
 }
 
+type BookNotFoundError {
+  bookId: String!
+  message: String!
+}
+
+union BookResult = Book | BookNotFoundError | BookValidationError
+
+type BookValidationError {
+  field: String!
+  message: String!
+}
+
 input CreateBookInput {
   authorId: String!
   genre: Genre!
@@ -69,7 +81,10 @@ input PaginationInput {
 type Query {
   book(id: ID!): Book
   bookConnection(filter: BookFilterInput, pagination: PaginationInput!): BookConnection!
+  bookOrThrow(id: ID!): Book!
+  bookResult(id: ID!): BookResult!
   books: [Book!]!
+  booksByIds(ids: [ID!]!): [BookResult!]!
 }
 
 input UpdateBookInput {

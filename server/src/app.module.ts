@@ -13,6 +13,17 @@ import { ErrorHandlingModule } from './exercises/layer04-error-and-optimization/
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       sortSchema: true,
       playground: true,
+      formatError: (error) => ({
+        message: error.message,
+        extensions: {
+          code: error.extensions?.code ?? 'INTERNAL_SERVER_ERROR',
+          timestamp: new Date().toISOString(),
+          trace:
+            process.env.NODE_ENV === 'production'
+              ? null
+              : error.extensions?.stacktrace,
+        },
+      }),
     }),
     BooksModule,
     ErrorHandlingModule,

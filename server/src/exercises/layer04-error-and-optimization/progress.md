@@ -2,5 +2,5 @@
 
 ## サブトピック一覧
 
-- [ ] 01-error-handling（GraphQLエラーモデル、formatError、Union型Resultパターン）
+- [x] 01-error-handling（GraphQLエラーモデル、formatError、Union型Resultパターン）
 - [ ] 02-performance-optimization（Query Complexity、Depth Limiting、Persisted Queries）
