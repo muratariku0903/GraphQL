@@ -85,6 +85,7 @@ type Query {
   bookResult(id: ID!): BookResult!
   books: [Book!]!
   booksByIds(ids: [ID!]!): [BookResult!]!
+  performanceBooks: [Book!]!
 }
 
 input UpdateBookInput {

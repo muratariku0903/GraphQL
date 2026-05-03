@@ -5,6 +5,45 @@ import { join } from 'path';
 import { AppController } from './app.controller';
 import { BooksModule } from './exercises/layer01-basics/01-schema-and-types/books.module';
 import { ErrorHandlingModule } from './exercises/layer04-error-and-optimization/01-error-handling/error-handling.module';
+import depthLimit from 'graphql-depth-limit';
+import { ApolloServerPlugin } from '@apollo/server';
+import {
+  fieldExtensionsEstimator,
+  getComplexity,
+  simpleEstimator,
+} from 'graphql-query-complexity';
+import { GraphQLError } from 'graphql';
+import { PerformanceModule } from './exercises/layer04-error-and-optimization/02-performance-optimization/performance.module';
+import { ApolloServerPluginCacheControl } from '@apollo/server/plugin/cacheControl';
+import responseCachePlugin from '@apollo/server-plugin-response-cache';
+import { InMemoryLRUCache } from '@apollo/utils.keyvaluecache';
+
+const complexityPlugin: ApolloServerPlugin = {
+  async requestDidStart() {
+    return {
+      async didResolveOperation({ request, document, schema }) {
+        const complexity = getComplexity({
+          schema,
+          operationName: request.operationName,
+          query: document,
+          variables: request.variables,
+          estimators: [
+            fieldExtensionsEstimator(),
+            simpleEstimator({ defaultComplexity: 0 }),
+          ],
+        });
+
+        const maxComplexity = 100;
+        // const maxComplexity = 9;
+        if (complexity > maxComplexity) {
+          throw new GraphQLError(
+            `Query too complex: ${complexity}. Maximum allowed: ${maxComplexity}`,
+          );
+        }
+      },
+    };
+  },
+};
 
 @Module({
   imports: [
@@ -24,9 +63,17 @@ import { ErrorHandlingModule } from './exercises/layer04-error-and-optimization/
               : error.extensions?.stacktrace,
         },
       }),
+      validationRules: [depthLimit(4)],
+      cache: new InMemoryLRUCache(),
+      plugins: [
+        ApolloServerPluginCacheControl({ defaultMaxAge: 0 }),
+        responseCachePlugin(),
+        complexityPlugin,
+      ],
     }),
     BooksModule,
     ErrorHandlingModule,
+    PerformanceModule,
   ],
   controllers: [AppController],
 })
