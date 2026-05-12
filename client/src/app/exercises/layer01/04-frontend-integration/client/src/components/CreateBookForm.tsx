@@ -1,10 +1,10 @@
 "use client";
 
-import { gql, useMutation } from "urql";
-import { Genre } from "./BookList";
+import { gql } from "urql";
+import { useCreateBookMutation } from "@/generated/graphql";
 
-const CreateBookMutation = gql`
-  mutation createBook($input: CreateBookInput!) {
+gql`
+  mutation CreateBook($input: CreateBookInput!) {
     createBook(input: $input) {
       title
       genre
@@ -16,7 +16,7 @@ const CreateBookMutation = gql`
 `;
 
 export const CreateBookForm = () => {
-  const [{ fetching }, executeMutation] = useMutation(CreateBookMutation);
+  const [{ fetching }, executeMutation] = useCreateBookMutation();
 
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -24,19 +24,19 @@ export const CreateBookForm = () => {
 
     const { data, error } = await executeMutation({
       input: {
-        title: formData.get("title"),
+        title: String(formData.get("title")),
         authorId: "a1",
         publishedYear: formData.get("publishedYear")
           ? Number(formData.get("publishedYear"))
           : null,
-        genre: Genre.FICTION,
+        genre: "FICTION",
       },
     });
 
     if (error) {
       console.error("Mutation failed:", error);
     } else {
-      console.log("Created:", data?.createPost);
+      console.log("Created:", data?.createBook);
     }
   };
 

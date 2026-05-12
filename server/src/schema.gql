@@ -40,6 +40,14 @@ type BookNotFoundError {
 
 union BookResult = Book | BookNotFoundError | BookValidationError
 
+type BookV2 {
+  genre: Genre!
+  id: ID!
+  publishedDate: String
+  publishedYear: Int @deprecated(reason: "Use publishedDate instead")
+  title: String!
+}
+
 type BookValidationError {
   field: String!
   message: String!
@@ -83,8 +91,10 @@ type Query {
   bookConnection(filter: BookFilterInput, pagination: PaginationInput!): BookConnection!
   bookOrThrow(id: ID!): Book!
   bookResult(id: ID!): BookResult!
+  bookV2(id: ID!): BookV2
   books: [Book!]!
   booksByIds(ids: [ID!]!): [BookResult!]!
+  booksV2: [BookV2!]!
   performanceBooks: [Book!]!
 }
 

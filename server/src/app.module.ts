@@ -17,6 +17,7 @@ import { PerformanceModule } from './exercises/layer04-error-and-optimization/02
 import { ApolloServerPluginCacheControl } from '@apollo/server/plugin/cacheControl';
 import responseCachePlugin from '@apollo/server-plugin-response-cache';
 import { InMemoryLRUCache } from '@apollo/utils.keyvaluecache';
+import { SchemaDesignModule } from './exercises/layer06-testing-and-schema-design/02-schema-design-and-versioning/schema-design.module';
 
 const complexityPlugin: ApolloServerPlugin = {
   async requestDidStart() {
@@ -74,6 +75,7 @@ const complexityPlugin: ApolloServerPlugin = {
     BooksModule,
     ErrorHandlingModule,
     PerformanceModule,
+    SchemaDesignModule,
   ],
   controllers: [AppController],
 })

@@ -1,30 +1,10 @@
 "use client";
 
-import { useQuery, gql } from "@urql/next";
+import { gql } from "@urql/next";
+import { useBookListQuery } from "@/generated/graphql";
 
-export enum Genre {
-  FICTION = "FICTION",
-  NON_FICTION = "NON_FICTION",
-  SCIENCE = "SCIENCE",
-  TECHNOLOGY = "TECHNOLOGY",
-  HISTORY = "HISTORY",
-}
-
-export interface BooksQueryResult {
-  books: {
-    id: string;
-    title: string;
-    genre: Genre;
-    author: {
-      id: string;
-      name: string;
-      country: string;
-    };
-  }[];
-}
-
-const BooksQuery = gql`
-  query {
+gql`
+  query BookList {
     books {
       id
       title
@@ -39,7 +19,7 @@ const BooksQuery = gql`
 `;
 
 export const BookList = () => {
-  const [result] = useQuery<BooksQueryResult>({ query: BooksQuery });
+  const [result] = useBookListQuery();
   const { data, fetching, error } = result;
 
   if (fetching) return <p>Loading...</p>;
